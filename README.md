@@ -57,18 +57,4 @@
      ```
    - Isso vai abrir uma janela com o HTML carregado, mostrando seu primeiro app feito com Electron!
 
----
 
-<h2>📫 Entre em contato:</h2>
-<p>
-  📧 <a href="mailto:satoyatooh@gmail.com">satoyatooh@gmail.com</a><br>
-  🐦 <a href="https://x.com/bosto_com" target="_blank">Twitter</a>
-</p>
-
----
-
-<h2 align="center">"Aprender é a minha arma, e cada passo importa na minha jornada de crescimento!"</h2>
-
-<p align="center">
-  <img src="eucoding.webp" alt="coding gif" width="200">
-</p>
