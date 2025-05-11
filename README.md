@@ -1,14 +1,5 @@
 
 
-<h2>🛠️ Tecnologias que estou utilizando:</h2>
-<p>
-  <img src="https://img.shields.io/badge/Node.js-339933?style=for-the-badge&logo=node.js&logoColor=white" alt="Node.js">
-  <img src="https://img.shields.io/badge/Electron-47848F?style=for-the-badge&logo=electron&logoColor=white" alt="Electron">
-  <img src="https://img.shields.io/badge/JavaScript-F7DF1E?style=for-the-badge&logo=javascript&logoColor=black" alt="JavaScript">
-</p>
-
----
-
 <h2>⚡ Passo a Passo para Rodar o Projeto no Electron:</h2>
 
 1. **Acessar o site do Node.js:**
@@ -56,11 +47,12 @@
      npm start
      ```
    - Isso vai abrir uma janela com o HTML carregado, mostrando seu primeiro app feito com Electron!
-  
-     <br>
-     <br>
-     <br>
 
+---
+
+<h2>📥 Exemplo de Código:</h2>
+
+### **HTML com script incluso:**
 ```html
 <!DOCTYPE html>
 <html lang="pt-BR">
