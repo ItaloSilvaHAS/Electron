@@ -56,56 +56,105 @@
 ```
 <!DOCTYPE html>
 <html lang="pt-BR">
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Meu Navegador</title>
-  <script src="https://cdn.tailwindcss.com"></script>
-</head>
-<body class="bg-gray-900 text-white font-sans flex flex-col items-center p-6">
-
-  <form id="searchForm" class="w-full max-w-3xl flex mb-4">
-    <input
-      id="urlInput"
-      type="text"
-      placeholder="Digite uma URL ou termo de pesquisa"
-      class="flex-grow p-4 text-black rounded-l-lg"
-    />
-    <button
-      type="submit"
-      class="bg-blue-600 hover:bg-blue-700 px-6 rounded-r-lg"
-    >
-      Ir
-    </button>
-  </form>
-
-  <script>
-    const { ipcRenderer } = require("electron");
-
-    const form = document.getElementById("searchForm");
-    const input = document.getElementById("urlInput");
-
-    form.addEventListener("submit", (e) => {
-      e.preventDefault();
-      const valor = input.value.trim();
-
-      if (!valor) return;
-
-      let destino = valor;
-
-      try {
-        new URL(valor);
-      } catch {
-        // Não é URL? Então pesquisa no Google
-        const query = encodeURIComponent(valor);
-        destino = `https://www.google.com/search?q=${query}`;
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Meu Navegador</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+      * {
+        box-sizing: border-box;
       }
 
-      ipcRenderer.send("navegar-para", destino);
-    });
-  </script>
-</body>
+      body {
+        margin: 0;
+        font-family: 'Inter', sans-serif;
+        background-color: #0f172a;
+        color: white;
+        height: 100vh;
+        display: flex;
+        flex-direction: column;
+      }
+
+      #drag-region {
+        -webkit-app-region: drag;
+      }
+    </style>
+  </head>
+  <body>
+    <!-- Barra de título arrastável -->
+    <div id="drag-region" class="h-8 bg-slate-800 w-full"></div>
+
+    <!-- Interface principal -->
+    <div class="flex h-full">
+      <!-- Barra lateral -->
+      <aside class="w-20 bg-slate-900 flex flex-col items-center py-4 space-y-4">
+        <button
+          onclick="navegarPara('https://web.whatsapp.com')"
+          class="hover:bg-slate-700 p-2 rounded"
+        >
+          <img src="https://cdn-icons-png.flaticon.com/512/733/733585.png" class="w-8 h-8" />
+        </button>
+        <button
+          onclick="navegarPara('https://chat.openai.com')"
+          class="hover:bg-slate-700 p-2 rounded"
+        >
+          <img src="https://cdn-icons-png.flaticon.com/512/1045/1045946.png" class="w-8 h-8" />
+        </button>
+      </aside>
+
+      <!-- Conteúdo principal -->
+      <main class="flex-1 flex flex-col">
+        <!-- Barra de pesquisa e ações -->
+        <div class="bg-slate-800 p-3 flex gap-2">
+          <input
+            id="barra"
+            type="text"
+            placeholder="Digite uma URL ou termo de pesquisa"
+            class="flex-1 px-4 py-2 rounded bg-white text-black focus:outline-none"
+          />
+          <button
+            onclick="pesquisar()"
+            class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded"
+          >Buscar</button>
+          <button
+            onclick="toggleModoClaro()"
+            class="bg-gray-600 hover:bg-gray-700 text-white px-4 py-2 rounded"
+          >Modo Claro</button>
+        </div>
+
+        <!-- Navegação por abas (futuro) -->
+        <div id="abas" class="bg-slate-700 px-3 py-1 text-sm flex gap-3"></div>
+      </main>
+    </div>
+
+    <script>
+      const { ipcRenderer } = require('electron');
+
+      function pesquisar() {
+        const barra = document.getElementById('barra');
+        let valor = barra.value.trim();
+
+        if (!valor) return;
+
+        if (!/^https?:\/\//.test(valor)) {
+          valor = 'https://www.google.com/search?q=' + encodeURIComponent(valor);
+        }
+
+        ipcRenderer.send('navegar-para', valor);
+      }
+
+      function navegarPara(url) {
+        ipcRenderer.send('navegar-para', url);
+      }
+
+      function toggleModoClaro() {
+        ipcRenderer.send('modo-claro');
+      }
+    </script>
+  </body>
 </html>
+
 ```
 
 <br>
@@ -113,12 +162,14 @@
 
 <h2>🔥 main.js:</h2>
 
-```### **Main.js:**
-```const { app, BrowserWindow, BrowserView } = require("electron");
+### **Main.js:**
+```
+const { app, BrowserWindow, BrowserView, ipcMain } = require("electron");
 const path = require("path");
 
 let mainWindow;
 let view;
+let modoClaroAtivo = false;
 
 function createWindow() {
   mainWindow = new BrowserWindow({
@@ -141,18 +192,37 @@ function createWindow() {
   });
 
   mainWindow.setBrowserView(view);
-  view.setBounds({ x: 0, y: 100, width: 1200, height: 700 }); // ajustável com base na UI
+  view.setBounds({ x: 0, y: 100, width: 1200, height: 700 });
   view.setAutoResize({ width: true, height: true });
-
-  // Quando receber uma URL via evento
-  const { ipcMain } = require("electron");
-  ipcMain.on("navegar-para", (event, url) => {
-    if (!/^https?:\/\//.test(url)) url = "https://" + url;
-    view.webContents.loadURL(url);
-  });
 }
 
-app.whenReady().then(() => {
-  createWindow();
+ipcMain.on("navegar-para", (event, url) => {
+  if (!/^https?:\/\//.test(url)) url = "https://" + url;
+  view.webContents.loadURL(url);
 });
+
+ipcMain.on("modo-claro", () => {
+  if (!view) return;
+  modoClaroAtivo = !modoClaroAtivo;
+
+  const cssClaro = `
+    html, body {
+      background: white !important;
+      color: black !important;
+    }
+    * {
+      background-color: white !important;
+      color: black !important;
+      border-color: #ccc !important;
+    }
+  `;
+
+  if (modoClaroAtivo) {
+    view.webContents.insertCSS(cssClaro);
+  } else {
+    view.webContents.reload(); // volta ao modo original
+  }
+});
+
+app.whenReady().then(createWindow);
 
