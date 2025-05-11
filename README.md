@@ -56,5 +56,64 @@
      npm start
      ```
    - Isso vai abrir uma janela com o HTML carregado, mostrando seu primeiro app feito com Electron!
+  
+     <br>
+     <br>
+     <br>
+
+'''bash
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Meu Navegador</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-900 text-white font-sans flex flex-col items-center p-6">
+
+  <form id="searchForm" class="w-full max-w-3xl flex mb-4">
+    <input
+      id="urlInput"
+      type="text"
+      placeholder="Digite uma URL ou termo de pesquisa"
+      class="flex-grow p-4 text-black rounded-l-lg"
+    />
+    <button
+      type="submit"
+      class="bg-blue-600 hover:bg-blue-700 px-6 rounded-r-lg"
+    >
+      Ir
+    </button>
+  </form>
+
+  <script>
+    const { ipcRenderer } = require("electron");
+
+    const form = document.getElementById("searchForm");
+    const input = document.getElementById("urlInput");
+
+    form.addEventListener("submit", (e) => {
+      e.preventDefault();
+      const valor = input.value.trim();
+
+      if (!valor) return;
+
+      let destino = valor;
+
+      try {
+        new URL(valor);
+      } catch {
+        // Não é URL? Então pesquisa no Google
+        const query = encodeURIComponent(valor);
+        destino = `https://www.google.com/search?q=${query}`;
+      }
+
+      ipcRenderer.send("navegar-para", destino);
+    });
+  </script>
+</body>
+</html>
+'''
 
 
