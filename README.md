@@ -53,7 +53,7 @@
 <h2>📥 Exemplo de Código:</h2>
 
 ### **HTML com script incluso:**
-```html
+```
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
@@ -106,13 +106,14 @@
   </script>
 </body>
 </html>
+```
 
 <br>
 <br>
 
 <h2>🔥 main.js:</h2>
 
-### **HTML com script incluso:**
+```### **Main.js:**
 ```const { app, BrowserWindow, BrowserView } = require("electron");
 const path = require("path");
 
