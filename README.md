@@ -61,7 +61,6 @@
      <br>
      <br>
 
-'''bash
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
@@ -114,6 +113,4 @@
   </script>
 </body>
 </html>
-'''
-
 
