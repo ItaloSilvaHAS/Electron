@@ -106,3 +106,52 @@
   </script>
 </body>
 </html>
+
+<br>
+<br>
+
+<h2>🔥 main.js:</h2>
+
+### **HTML com script incluso:**
+```const { app, BrowserWindow, BrowserView } = require("electron");
+const path = require("path");
+
+let mainWindow;
+let view;
+
+function createWindow() {
+  mainWindow = new BrowserWindow({
+    width: 1200,
+    height: 800,
+    webPreferences: {
+      preload: path.join(__dirname, "preload.js"),
+      nodeIntegration: true,
+      contextIsolation: false,
+    },
+  });
+
+  mainWindow.loadFile("index.html");
+
+  view = new BrowserView({
+    webPreferences: {
+      nodeIntegration: false,
+      contextIsolation: true,
+    },
+  });
+
+  mainWindow.setBrowserView(view);
+  view.setBounds({ x: 0, y: 100, width: 1200, height: 700 }); // ajustável com base na UI
+  view.setAutoResize({ width: true, height: true });
+
+  // Quando receber uma URL via evento
+  const { ipcMain } = require("electron");
+  ipcMain.on("navegar-para", (event, url) => {
+    if (!/^https?:\/\//.test(url)) url = "https://" + url;
+    view.webContents.loadURL(url);
+  });
+}
+
+app.whenReady().then(() => {
+  createWindow();
+});
+
