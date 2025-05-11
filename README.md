@@ -1,11 +1,4 @@
-<h1 align="center">Olá! Eu sou o Ítalo 👋</h1>
 
-<p align="center">
-  Sou um <strong>desenvolvedor iniciante</strong> apaixonado por criar experiências digitais incríveis e criativas.<br>
-  Atualmente, estou explorando <strong>Front-end</strong>, <strong>Back-end</strong> e <strong>Desenvolvimento de Jogos</strong>—aprendendo uma linha de código de cada vez!
-</p>
-
----
 
 <h2>🛠️ Tecnologias que estou utilizando:</h2>
 <p>
